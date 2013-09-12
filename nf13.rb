@@ -1,11 +1,15 @@
 #!/usr/bin/ruby
 #
-# Simple ruby script which returns next friday 13th for 10 years forward.
-#
+# Simple ruby script which returns next friday 13th for x years forward.
+# 
 
 year = Time.now().year
 yearmax = year + 25
 dates = []
+
+#
+# iterate over years and months
+#
 
 while year < yearmax
  month = 1
@@ -20,10 +24,14 @@ while year < yearmax
  year = year + 1
 end
 
+#
+# present a list with 3 columns of upcoming fridays
+#
+
 iter = 1
 for date in dates
  print date + " "
- if iter > 12
+ if iter > 3
    print "\n"
    iter = 0
  end
