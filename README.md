@@ -8,5 +8,7 @@ almost any changes if you feel that you have time to contribute.
 How-to for dummies
 ==============
  git clone https://github.com/AlexanderSalmin/nextFriday13th.git
+
  cd nextFriday13th
+
  ruby nf13.rb
