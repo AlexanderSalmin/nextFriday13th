@@ -12,3 +12,7 @@ How-to for dummies
  cd nextFriday13th
 
  ruby nf13.rb
+
+Requirements
+============
+Ruby 1.9.3
