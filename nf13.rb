@@ -3,38 +3,20 @@
 # Simple ruby script which returns next friday 13th for x years forward.
 # 
 
-year = Time.now().year
-yearmax = year + 25
-dates = []
+current_year = Time.now.year
+max_year = current_year + 25
 
-#
-# iterate over years and months
-#
-
-while year < yearmax
- month = 1
- while month < 13
-   curdate = Time.new(year, month, 13)
-   if curdate.friday?
-    month < 10 ? newmonth = "0" + month.to_s : newmonth = month
-    dates << "#{year}-#{newmonth}-13"
-   end
-   month = month + 1
- end
- year = year + 1
+# Find all Friday the 13th dates
+friday_13th_dates = (current_year...max_year).flat_map do |year|
+  (1..12).map do |month|
+    date = Time.new(year, month, 13)
+    date if date.friday?
+  end.compact
 end
 
-#
-# present a list with 3 columns of upcoming fridays
-#
+# Format dates and output in 3 columns
+friday_13th_dates.map! { |date| date.strftime("%Y-%m-13") }
 
-iter = 1
-for date in dates
- print date + " "
- if iter > 3
-   print "\n"
-   iter = 0
- end
- iter = iter + 1
+friday_13th_dates.each_slice(3) do |date_group|
+  puts date_group.join(" ")
 end
-puts ""
