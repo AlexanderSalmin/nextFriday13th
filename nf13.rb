@@ -3,6 +3,7 @@
 # Simple ruby script which returns next Friday the 13th dates
 #
 
+require 'date'
 require 'optparse'
 
 class Friday13thFinder
@@ -27,23 +28,17 @@ class Friday13thFinder
       end
     end.parse!
   rescue OptionParser::InvalidOption, OptionParser::MissingArgument => e
-    puts "Error: #{e.message}"
-    puts "Use -h for help"
-    exit 1
+    abort_with_error(e.message)
   end
 
   def find_friday_13ths
-    current_year = Time.now.year
-    max_year = current_year + @options[:years_ahead]
+    current_year = Date.today.year
+    max_year = current_year + years_ahead
 
     (current_year..max_year).flat_map do |year|
       (1..12).map do |month|
-        begin
-          date = Date.new(year, month, 13)
-          date if date.friday?
-        rescue ArgumentError
-          nil # Skip invalid dates (like Feb 29 in non-leap years)
-        end
+        date = Date.new(year, month, 13)
+        date if date.friday?
       end.compact
     end
   end
@@ -54,11 +49,11 @@ class Friday13thFinder
 
   def display_dates(dates)
     if dates.empty?
-      puts "No Friday the 13th dates found in the next #{@options[:years_ahead]} years."
+      puts "No Friday the 13th dates found in the next #{years_ahead} years."
       return
     end
 
-    puts "Friday the 13th dates for the next #{@options[:years_ahead]} years:"
+    puts "Friday the 13th dates for the next #{years_ahead} years:"
     puts "-" * 50
     
     formatted_dates = format_dates(dates)
@@ -70,9 +65,23 @@ class Friday13thFinder
   end
 
   def run
-    require 'date'
     dates = find_friday_13ths
     display_dates(dates)
+  end
+
+  private
+
+  def years_ahead
+    years = @options[:years_ahead]
+    return years if years.is_a?(Integer) && years >= 0
+
+    abort_with_error("Years ahead must be a non-negative integer.")
+  end
+
+  def abort_with_error(message)
+    warn "Error: #{message}"
+    warn "Use -h for help"
+    exit 1
   end
 end
 
